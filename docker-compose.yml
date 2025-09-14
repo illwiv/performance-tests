@@ -1,0 +1,11 @@
+#version: '3.9'
+#
+#
+#services:
+#  script:
+#    build:
+#      dockerfile: Dockerfile.redis
+#
+#
+#  redis:
+#    image: redis:alpine

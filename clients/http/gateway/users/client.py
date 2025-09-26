@@ -27,7 +27,7 @@ class UsersGatewayHTTPClient(HTTPClient):
         :param request: Словарь с данными нового пользователя.
         :return: Ответ от сервера (объект httpx.Response).
         """
-        return self.post("/api/v1/users", json=request)
+        return self.post("/api/v1/users", json=request.model_dump(by_alias=True))
 
     def get_user(self, user_id: str) -> GetUserResponseSchema:
         response = self.get_user_api(user_id)

@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field, ConfigDict
 from enum import StrEnum
 
+from tools.fakers import fake
+
 
 class GetOperationsQuerySchema(BaseModel):
     """
@@ -11,14 +13,31 @@ class GetOperationsQuerySchema(BaseModel):
     account_id: str = Field(alias="accountId")
 
 
+class OperationType(StrEnum):
+    FEE = "FEE"
+    TOP_UP = "TOP_UP"
+    PURCHASE = "PURCHASE"
+    CASHBACK = "CASHBACK"
+    TRANSFER = "TRANSFER"
+    BILL_PAYMENT = "BILL_PAYMENT"
+    CASH_WITHDRAWAL = "CASH_WITHDRAWAL"
+
+
+class OperationStatus(StrEnum):
+    FAILED = "FAILED"
+    COMPLETED = "COMPLETED"
+    IN_PROGRESS = "IN_PROGRESS"
+    UNSPECIFIED = "UNSPECIFIED"
+
+
 class MakeOperationRequestSchema(BaseModel):
     """
     Базовая структура данных для создания операции.
     """
     model_config = ConfigDict(populate_by_name=True)
 
-    status: str
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.float)
     card_id: str = Field(alias="cardId")
     account_id: str = Field(alias="accountId")
 
@@ -55,7 +74,7 @@ class MakePurchaseOperationRequestSchema(MakeOperationRequestSchema):
     """
     Структура данных для создания операции покупки.
     """
-    category: str
+    category: str = Field(default_factory=fake.category)
 
 
 class MakeBillPaymentRequestSchema(MakeOperationRequestSchema):
@@ -70,23 +89,6 @@ class MakeCashWithdrawalRequestSchema(MakeOperationRequestSchema):
     Структура данных для создания операции снятия наличных денег.
     """
     pass
-
-
-class OperationType(StrEnum):
-    FEE = "FEE"
-    TOP_UP = "TOP_UP"
-    PURCHASE = "PURCHASE"
-    CASHBACK = "CASHBACK"
-    TRANSFER = "TRANSFER"
-    BILL_PAYMENT = "BILL_PAYMENT"
-    CASH_WITHDRAWAL = "CASH_WITHDRAWAL"
-
-
-class OperationStatus(StrEnum):
-    FAILED = "FAILED"
-    COMPLETED = "COMPLETED"
-    IN_PROGRESS = "IN_PROGRESS"
-    UNSPECIFIED = "UNSPECIFIED"
 
 
 class OperationSchema(BaseModel):

@@ -1,5 +1,6 @@
 from grpc import Channel
 
+from clients.grpc.client import GRPCClient
 from clients.grpc.gateway.client import build_gateway_grpc_client
 from contracts.services.gateway.operations.rpc_make_top_up_operation_pb2 import MakeTopUpOperationResponse, \
     MakeTopUpOperationRequest
@@ -26,7 +27,7 @@ from contracts.services.gateway.operations.rpc_make_cash_withdrawal_operation_pb
     MakeCashWithdrawalOperationRequest, MakeCashWithdrawalOperationResponse
 
 
-class OperationsGatewayGRPCClient:
+class OperationsGatewayGRPCClient(GRPCClient):
     """
     gRPC-клиент для взаимодействия с OperationsGatewayService.
     Предоставляет высокоуровневые методы для работы со счетами.

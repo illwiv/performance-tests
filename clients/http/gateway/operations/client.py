@@ -1,5 +1,5 @@
 from httpx import Response, QueryParams
-from clients.http.client import HTTPClient
+from clients.http.client import HTTPClient, HTTPClientExtensions
 from clients.http.gateway.client import build_gateway_http_client
 from clients.http.gateway.operations.schema import GetOperationsQuerySchema, MakeFeeOperationRequestSchema, \
     MakeTopUpOperationRequestSchema, MakeCashbackOperationRequestSchema, MakeTransferOperationRequestSchema, \
@@ -21,7 +21,8 @@ class OperationsGatewayHTTPClient(HTTPClient):
 
         :return: Ответ от сервера (объект httpx.Response).
         """
-        return self.get(f"/api/v1/operations/{operation_id}")
+        return self.get(f"/api/v1/operations/{operation_id}",
+                        extensions=HTTPClientExtensions(route="/api/v1/operations/{operation_id}"))
 
     def get_operation_receipt_api(self, operation_id: str) -> Response:
         """
@@ -29,7 +30,8 @@ class OperationsGatewayHTTPClient(HTTPClient):
 
         :return: Ответ от сервера (объект httpx.Response).
         """
-        return self.get(f"/api/v1/operations/operation-receipt/{operation_id}.")
+        return self.get(f"/api/v1/operations/operation-receipt/{operation_id}",
+                        extensions=HTTPClientExtensions(route="/api/v1/operations/operation-receipt/{operation_id}"))
 
     def get_operations_api(self, account_id: GetOperationsQuerySchema) -> Response:
         """
@@ -38,7 +40,8 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :account_id: Идентификатор аккаунта.
         :return: Ответ от сервера (объект httpx.Response).
         """
-        return self.get("/api/v1/operations", params=QueryParams(**account_id.model_dump(by_alias=True)))
+        return self.get("/api/v1/operations", params=QueryParams(**account_id.model_dump(by_alias=True)),
+                        extensions=HTTPClientExtensions(route="/api/v1/operations"))
 
     def get_operation_recemake_fee_operation_api(self, account_id: GetOperationsQuerySchema) -> Response:
         """
@@ -47,7 +50,9 @@ class OperationsGatewayHTTPClient(HTTPClient):
         :account_id: Идентификатор аккаунта.
         :return: Ответ от сервера (объект httpx.Response).
         """
-        return self.get("/api/v1/operations/operations-summary", params=QueryParams(**account_id.model_dump(by_alias=True)))
+        return self.get("/api/v1/operations/operations-summary",
+                        params=QueryParams(**account_id.model_dump(by_alias=True)),
+                        extensions=HTTPClientExtensions(route="/api/v1/operations/operations-summary"))
 
     def make_fee_operation_api(self, request: MakeFeeOperationRequestSchema) -> Response:
         """
@@ -142,19 +147,19 @@ class OperationsGatewayHTTPClient(HTTPClient):
 
     def make_cashback_operation(self, account_id: str, card_id: str) -> MakeCashbackOperationResponseSchema:
         request = MakeCashbackOperationRequestSchema(account_id=account_id,
-                                                   card_id=card_id)
+                                                     card_id=card_id)
         response = self.make_cashback_operation_api(request)
         return MakeCashbackOperationResponseSchema.model_validate_json(response.text)
 
     def make_transfer_operation(self, account_id: str, card_id: str) -> MakeTransferOperationResponseSchema:
         request = MakeTransferOperationRequestSchema(account_id=account_id,
-                                                   card_id=card_id)
+                                                     card_id=card_id)
         response = self.make_transfer_operation_api(request)
         return MakeTransferOperationResponseSchema.model_validate_json(response.text)
 
     def make_purchase_operation(self, account_id: str, card_id: str) -> MakePurchaseOperationResponseSchema:
         request = MakePurchaseOperationRequestSchema(account_id=account_id,
-                                                   card_id=card_id)
+                                                     card_id=card_id)
         response = self.make_purchase_operation_api(request)
         return MakePurchaseOperationResponseSchema.model_validate_json(response.text)
 
@@ -163,7 +168,8 @@ class OperationsGatewayHTTPClient(HTTPClient):
         response = self.make_bill_payment_operation_api(request)
         return MakeBillPaymentOperationResponseSchema.model_validate_json(response.text)
 
-    def make_cash_withdrawal_operation(self, account_id: str, card_id: str) -> MakeCashWithdrawalOperationResponseSchema:
+    def make_cash_withdrawal_operation(self, account_id: str,
+                                       card_id: str) -> MakeCashWithdrawalOperationResponseSchema:
         request = MakeCashWithdrawalRequestSchema(account_id=account_id, card_id=card_id)
         response = self.make_cash_withdrawal_operation_api(request)
         return MakeCashWithdrawalOperationResponseSchema.model_validate_json(response.text)

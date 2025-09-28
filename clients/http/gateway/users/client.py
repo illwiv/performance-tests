@@ -2,7 +2,7 @@ from httpx import Response
 from locust.env import Environment
 from clients.http.client import HTTPClient, HTTPClientExtensions
 from clients.http.gateway.client import build_gateway_http_client, build_gateway_locust_http_client
-from clients.http.gateway.users.schema import CreateUserRequestSchema, GetUserResponseSchema
+from clients.http.gateway.users.schema import CreateUserRequestSchema, GetUserResponseSchema, CreateUserResponseSchema
 
 
 class UsersGatewayHTTPClient(HTTPClient):
@@ -32,10 +32,10 @@ class UsersGatewayHTTPClient(HTTPClient):
         response = self.get_user_api(user_id)
         return GetUserResponseSchema.model_validate_json(response.text)
 
-    def create_user(self) -> GetUserResponseSchema:
+    def create_user(self) -> CreateUserResponseSchema:
         request = CreateUserRequestSchema()
         response = self.create_user_api(request)
-        return GetUserResponseSchema.model_validate_json(response.text)
+        return CreateUserResponseSchema.model_validate_json(response.text)
 
 
 def build_users_gateway_http_client() -> UsersGatewayHTTPClient:

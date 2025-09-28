@@ -26,7 +26,7 @@ def locust_response_event_hook(environment: Environment):
     :return: Функция-хук для HTTPX response event hook.
     """
     def inner(response: Response) -> None:
-        exception = None
+        exception: HTTPError | HTTPStatusError | None = None
         try:
             response.raise_for_status()
         except (HTTPError, HTTPStatusError) as error:

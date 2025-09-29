@@ -1,8 +1,9 @@
-from locust import User, between, task, TaskSet
+from locust import task, TaskSet
 
 from clients.grpc.gateway.users.client import build_users_gateway_locust_grpc_client, UsersGatewayGRPCClient
 from clients.grpc.gateway.accounts.client import build_accounts_gateway_locust_grpc_client, AccountsGatewayGRPCClient
 from contracts.services.gateway.users.rpc_create_user_pb2 import CreateUserResponse
+from tools.locust.user import LocustBaseUser
 
 
 class GetAccountsTaskSet(TaskSet):
@@ -53,10 +54,8 @@ class GetAccountsTaskSet(TaskSet):
         self.accounts_gateway_client.get_accounts(user_id=self.create_user_response.user.id)
 
 
-class GetAccountsScenarioUser(User):
+class GetAccountsScenarioUser(LocustBaseUser):
     """
     Пользователь Locust, исполняющий последовательный сценарий.
     """
-    host = "localhost"
     tasks = [GetAccountsTaskSet]
-    wait_time = between(1, 3)

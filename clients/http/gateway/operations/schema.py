@@ -130,7 +130,7 @@ class GetOperationResponseSchema(BaseModel):
     """
     Структура данных для получения ответа по операции.
     """
-    operations: OperationSchema
+    operation: OperationSchema
 
 
 class GetOperationsResponseSchema(BaseModel):

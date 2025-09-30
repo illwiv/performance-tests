@@ -1,10 +1,10 @@
 from seeds.scenario import SeedsScenario
-from seeds.schema.plan import SeedsPlan, SeedUsersPlan, SeedAccountsPlan, SeedCardsPlan
+from seeds.schema.plan import SeedsPlan, SeedUsersPlan, SeedAccountsPlan
 
 
 class ExistingUserIssueVirtualCardSeedsScenario(SeedsScenario):
     """
-    Сценарий сидинга для существующего пользователя, который слодает счет.
+    Сценарий сидинга для существующего пользователя, который создает счет.
     Создаём 300 пользователей, каждому из которых открываем дебетовый счет.
     """
 
@@ -12,7 +12,7 @@ class ExistingUserIssueVirtualCardSeedsScenario(SeedsScenario):
     def plan(self) -> SeedsPlan:
         """
         Возвращает план сидинга для создания пользователей и их счетов.
-        Мы создаём 100 пользователей, каждый получит дебетовый и сберегательный счёт.
+        Мы создаём 300 пользователей, каждый получит дебетовый счет.
         """
         return SeedsPlan(
             users=SeedUsersPlan(
